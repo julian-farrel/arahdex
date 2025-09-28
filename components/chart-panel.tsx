@@ -11,7 +11,7 @@ export function ChartPanel() {
         {/* 2. Replace the old img tag with this component */}
         <TradingViewWidget />
 
-      </div>
+      </div>  
     </section>
   )
 }

@@ -34,7 +34,8 @@ export function TradePanel() {
             onClick={() => setSide("buy")}
             className={cn(
               "rounded px-3 py-1.5",
-              side === "buy" ? "bg-[color:var(--color-brand)]/25 text-foreground" : "text-foreground/60",
+              // When side is "buy", use a green background
+              side === "buy" ? "bg-green-500/25 text-foreground" : "text-foreground/60",
             )}
           >
             Buy
@@ -43,7 +44,8 @@ export function TradePanel() {
             onClick={() => setSide("sell")}
             className={cn(
               "rounded px-3 py-1.5",
-              side === "sell" ? "bg-[color:var(--color-brand)]/25 text-foreground" : "text-foreground/60",
+              // When side is "sell", use a red background
+              side === "sell" ? "bg-red-500/25 text-foreground" : "text-foreground/60",
             )}
           >
             Sell

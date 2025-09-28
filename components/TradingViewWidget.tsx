@@ -29,8 +29,8 @@ const TradingViewWidget: React.FC = () => {
           "symbol": "IDX:BBCA",
           "theme": "dark",
           "timezone": "Asia/Jakarta",
-          "backgroundColor": "rgba(22, 3, 4, 1)",
-          "gridColor": "rgba(242, 242, 242, 0.06)",
+          "backgroundColor": "rgba(2, 1, 35, 0.41)",
+          "gridColor": "rgba(225, 204, 204, 0.06)",
           "width": "100%",
           "height": "100%"
         }`;
@@ -42,7 +42,7 @@ const TradingViewWidget: React.FC = () => {
   // Simplify the return to be only a single div.
   // The script will build everything it needs inside this one container.
   return (
-    <div className="h-full" ref={container} />
+    <div className="h-[625px]" ref={container} />
   );
 };
 

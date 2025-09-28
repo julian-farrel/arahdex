@@ -43,30 +43,30 @@
 }
 
 .dark {
-  --background: #160304; /* dark maroon */
+  --background: #000000; /* dark maroon */
   --foreground: oklch(0.985 0 0); /* white */
 
-  --card: #2f0b0b; /* slightly lighter maroon for panels */
+  --card: #00000088; /* slightly lighter maroon for panels */
   --card-foreground: oklch(0.985 0 0);
 
-  --popover: #2f0b0b;
+  --popover: #1900ff;
   --popover-foreground: oklch(0.985 0 0);
 
-  --secondary: #3a0f0f;
+  --secondary: #1900ff;
   --secondary-foreground: oklch(0.985 0 0);
 
-  --muted: #3a0f0f;
+  --muted: #11076da7;
   --muted-foreground: oklch(0.985 0 0);
 
-  --accent: #3a0f0f;
+  --accent: #11076da7;
   --accent-foreground: oklch(0.985 0 0);
 
-  --border: #4a1414;
-  --input: #4a1414;
-  --ring: #6a1c1c;
+  --border: #1900ff;
+  --input: #1900ff;
+  --ring: #11076da7;
 
   /* keep brand as deep crimson selected from your image */
-  --brand: oklch(0.63 0.24 29);
+  --brand: rgb(33, 27, 197);
   --up: oklch(0.73 0.17 145);
   --down: oklch(0.61 0.2 27);
 
