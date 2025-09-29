@@ -43,7 +43,7 @@
 }
 
 .dark {
-  --background: #000000; /* dark maroon */
+  --background: #03001b; /* dark maroon */
   --foreground: oklch(0.985 0 0); /* white */
 
   --card: #00000088; /* slightly lighter maroon for panels */

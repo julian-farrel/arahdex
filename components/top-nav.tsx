@@ -3,16 +3,15 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ChevronDown, CircleHelp, Settings, Bell, Link2 } from "lucide-react"
-import Link from "next/link" // 1. Import the Link component
+import Link from "next/link"
+import Image from "next/image" // 1. Import the Image component
 
 export function TopNav() {
-  // 2. Define navigation items as an array of objects with titles and paths
   const navItems = [
     { title: "Trade", href: "/" },
     { title: "Portfolio", href: "/portfolio" },
     { title: "Referrals", href: "/referrals" },
     { title: "Leaderboard", href: "/leaderboard" },
-     // { title: "Staking", href: "/staking" },
     { title: "Blocks", href: "/blocks" },
   ]
 
@@ -21,11 +20,17 @@ export function TopNav() {
       <div className="mx-auto flex h-12 items-center justify-between px-3 md:h-14 md:px-4">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-[color:var(--color-brand)]" />
+            {/* 2. Replace the circular div with your logo */}
+            <Image
+              src="/Arah logo.png" // <-- Make sure this path matches your logo file in the /public folder
+              alt="Arah Logo"
+              width={12} // Adjust width as needed
+              height={12} // Adjust height as needed
+              className="h-3 w-3" // This ensures the size is consistent
+            />
             <span className="text-sm font-semibold tracking-tight md:text-base">Arah</span>
           </div>
           <nav className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
-            {/* 3. Map over the new array and use the Link component */}
             {navItems.map((item) => (
               <Link key={item.title} href={item.href} className="transition-colors hover:text-foreground">
                 {item.title}
