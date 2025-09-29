@@ -3,24 +3,36 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ChevronDown, CircleHelp, Settings, Bell, Link2 } from "lucide-react"
+import Link from "next/link" // 1. Import the Link component
 
 export function TopNav() {
+  // 2. Define navigation items as an array of objects with titles and paths
+  const navItems = [
+    { title: "Trade", href: "/" },
+    { title: "Portfolio", href: "/portfolio" },
+    { title: "Referrals", href: "/referrals" },
+    { title: "Leaderboard", href: "/leaderboard" },
+     // { title: "Staking", href: "/staking" },
+    { title: "Blocks", href: "/blocks" },
+  ]
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-[color:var(--color-card)]/80 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--color-card)]/60">
-      <div className="mx-auto flex h-12 md:h-14 items-center justify-between px-3 md:px-4">
+      <div className="mx-auto flex h-12 items-center justify-between px-3 md:h-14 md:px-4">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-[color:var(--color-brand)]" />
-            <span className="font-semibold tracking-tight text-sm md:text-base">Arah</span>
+            <span className="text-sm font-semibold tracking-tight md:text-base">Arah</span>
           </div>
-          <nav className="hidden md:flex items-center gap-4 text-xs text-muted-foreground">
-            {["Trade", "Vaults", "Portfolio", "Staking", "Referrals", "Leaderboard"].map((item) => (
-              <a key={item} href="#" className="hover:text-foreground transition-colors">
-                {item}
-              </a>
+          <nav className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
+            {/* 3. Map over the new array and use the Link component */}
+            {navItems.map((item) => (
+              <Link key={item.title} href={item.href} className="transition-colors hover:text-foreground">
+                {item.title}
+              </Link>
             ))}
             <div className="flex items-center gap-1">
-              <a href="#" className="hover:text-foreground transition-colors">
+              <a href="#" className="transition-colors hover:text-foreground">
                 More
               </a>
               <ChevronDown className="h-3.5 w-3.5" />
@@ -32,7 +44,7 @@ export function TopNav() {
           <Button
             size="sm"
             variant="ghost"
-            className="hidden sm:inline-flex text-muted-foreground hover:text-foreground"
+            className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
           >
             <Link2 className="h-4 w-4" />
           </Button>
