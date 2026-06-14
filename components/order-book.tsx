@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, useMemo } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { cn } from "@/lib/utils"
 
 interface BookLevel {
@@ -11,6 +11,12 @@ interface BookLevel {
 interface BookState {
   bids: BookLevel[]
   asks: BookLevel[]
+}
+
+interface HLBookLevel {
+  px: string
+  sz: string
+  n: number
 }
 
 export function OrderBook() {
@@ -43,18 +49,20 @@ export function OrderBook() {
         try {
           const msg = JSON.parse(event.data)
           if (msg.channel === "l2Book" && msg.data?.levels) {
-            const rawBids: [string, string][] = msg.data.levels[0] || []
-            const rawAsks: [string, string][] = msg.data.levels[1] || []
+            // Hyperliquid l2Book: levels[0] = bids, levels[1] = asks
+            // Each level is an object: { px: string, sz: string, n: number }
+            const rawBids: HLBookLevel[] = msg.data.levels[0] || []
+            const rawAsks: HLBookLevel[] = msg.data.levels[1] || []
 
             const bids: BookLevel[] = rawBids
-              .map(([p, s]) => ({ price: parseFloat(p), size: parseFloat(s) }))
-              .filter((l) => l.size > 0)
+              .map((l) => ({ price: parseFloat(l.px), size: parseFloat(l.sz) }))
+              .filter((l) => l.size > 0 && !isNaN(l.price) && !isNaN(l.size))
               .sort((a, b) => b.price - a.price)
               .slice(0, 14)
 
             const asks: BookLevel[] = rawAsks
-              .map(([p, s]) => ({ price: parseFloat(p), size: parseFloat(s) }))
-              .filter((l) => l.size > 0)
+              .map((l) => ({ price: parseFloat(l.px), size: parseFloat(l.sz) }))
+              .filter((l) => l.size > 0 && !isNaN(l.price) && !isNaN(l.size))
               .sort((a, b) => a.price - b.price)
               .slice(0, 14)
 

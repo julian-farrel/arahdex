@@ -28,6 +28,17 @@ interface HLCandle {
 const INTERVALS = ["1m", "5m", "15m", "1h", "4h", "1d"] as const
 type Interval = (typeof INTERVALS)[number]
 
+function parseCandle(c: HLCandle): CandlestickData<Time> | null {
+  const time = Math.floor(c.t / 1000)
+  const open = parseFloat(c.o)
+  const high = parseFloat(c.h)
+  const low = parseFloat(c.l)
+  const close = parseFloat(c.c)
+  if (isNaN(time) || isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) return null
+  if (time <= 0 || open <= 0) return null
+  return { time: time as Time, open, high, low, close }
+}
+
 async function fetchHistoricalCandles(interval: Interval): Promise<CandlestickData<Time>[]> {
   const intervalMs: Record<Interval, number> = {
     "1m": 60_000,
@@ -54,15 +65,23 @@ async function fetchHistoricalCandles(interval: Interval): Promise<CandlestickDa
     }),
   })
 
-  const data: HLCandle[] = await res.json()
+  const data = await res.json()
 
-  return data.map((c) => ({
-    time: (Math.floor(c.t / 1000)) as Time,
-    open: parseFloat(c.o),
-    high: parseFloat(c.h),
-    low: parseFloat(c.l),
-    close: parseFloat(c.c),
-  }))
+  // The API may return an array of candle objects directly
+  if (!Array.isArray(data)) return []
+
+  const candles: CandlestickData<Time>[] = []
+  for (const raw of data) {
+    const parsed = parseCandle(raw as HLCandle)
+    if (parsed) candles.push(parsed)
+  }
+
+  // Deduplicate by time (keep last occurrence) and sort ascending
+  const byTime = new Map<number, CandlestickData<Time>>()
+  for (const c of candles) {
+    byTime.set(c.time as number, c)
+  }
+  return Array.from(byTime.values()).sort((a, b) => (a.time as number) - (b.time as number))
 }
 
 export default function LightweightChart() {
@@ -181,16 +200,15 @@ export default function LightweightChart() {
         if (cancelled) return
         try {
           const msg = JSON.parse(event.data)
+
+          // Hyperliquid candle WS message:
+          // { "channel": "candle", "data": { "t": ..., "T": ..., "s": ..., "i": ..., "o": "...", "c": "...", "h": "...", "l": "...", "v": "...", "n": ... } }
           if (msg.channel === "candle" && msg.data) {
             const c = msg.data as HLCandle
-            const bar: CandlestickData<Time> = {
-              time: (Math.floor(c.t / 1000)) as Time,
-              open: parseFloat(c.o),
-              high: parseFloat(c.h),
-              low: parseFloat(c.l),
-              close: parseFloat(c.c),
+            const bar = parseCandle(c)
+            if (bar && seriesRef.current) {
+              seriesRef.current.update(bar)
             }
-            seriesRef.current?.update(bar)
           }
         } catch {
           // skip
