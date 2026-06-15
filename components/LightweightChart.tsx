@@ -97,12 +97,12 @@ export default function LightweightChart() {
     if (!container) return
 
     const chart = createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
+      width: container.clientWidth || container.offsetWidth,
+      height: container.clientHeight || container.offsetHeight || 400,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
         textColor: "rgba(255,255,255,0.5)",
-        fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+        fontFamily: "'Geist Sans', system-ui, sans-serif",
         fontSize: 11,
       },
       grid: {
@@ -132,12 +132,12 @@ export default function LightweightChart() {
     })
 
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: "oklch(0.73 0.17 145)",
-      downColor: "oklch(0.61 0.2 27)",
-      borderUpColor: "oklch(0.73 0.17 145)",
-      borderDownColor: "oklch(0.61 0.2 27)",
-      wickUpColor: "oklch(0.73 0.17 145 / 0.6)",
-      wickDownColor: "oklch(0.61 0.2 27 / 0.6)",
+      upColor: "#22c55e",
+      downColor: "#ef4444",
+      borderUpColor: "#22c55e",
+      borderDownColor: "#ef4444",
+      wickUpColor: "#22c55e99",
+      wickDownColor: "#ef444499",
     })
 
     chartRef.current = chart
@@ -145,10 +145,10 @@ export default function LightweightChart() {
 
     const ro = new ResizeObserver(() => {
       if (container) {
-        chart.applyOptions({
-          width: container.clientWidth,
-          height: container.clientHeight,
-        })
+        const w = container.clientWidth
+        const h = container.clientHeight || 400
+        chart.applyOptions({ width: w, height: h })
+        chart.timeScale().fitContent()
       }
     })
     ro.observe(container)
@@ -241,7 +241,7 @@ export default function LightweightChart() {
   }, [interval])
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" style={{ minHeight: "400px" }}>
       {/* Interval selector */}
       <div className="absolute top-2 left-2 z-20 flex items-center gap-1 rounded-md bg-background/60 backdrop-blur p-1">
         {INTERVALS.map((iv) => (
@@ -269,8 +269,12 @@ export default function LightweightChart() {
         <span className="text-[10px] text-muted-foreground font-medium">BTC-PERP</span>
       </div>
 
-      {/* Chart container */}
-      <div ref={containerRef} className="h-full w-full" />
+      {/* Chart container — explicit minHeight prevents lightweight-charts 0px canvas bug */}
+      <div
+        ref={containerRef}
+        className="h-full w-full"
+        style={{ minHeight: "400px" }}
+      />
     </div>
   )
 }
